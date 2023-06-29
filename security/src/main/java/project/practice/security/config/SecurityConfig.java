@@ -30,7 +30,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/","/users").permitAll()
                         .requestMatchers("/mypage").hasRole("USER")
                         .requestMatchers("/messages").hasRole("MANAGER")
                         .requestMatchers("/config").hasRole("ADMIN")
@@ -45,30 +45,30 @@ public class SecurityConfig {
     public static BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public static UserDetailsService users() {
-        BCryptPasswordEncoder passwordEncoder = passwordEncoder();
-        String password = passwordEncoder.encode("1111");
-
-        UserDetails user = User.builder()
-                .username("user")
-                .password(password)
-                .roles("USER")
-                .build();
-
-        UserDetails manager = User.builder()
-                .username("manager")
-                .password(password)
-                .roles("MANAGER")
-                .build();
-
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(password)
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(user, manager, admin);
-    }
+//
+//    @Bean
+//    public static UserDetailsService users() {
+//        BCryptPasswordEncoder passwordEncoder = passwordEncoder();
+//        String password = passwordEncoder.encode("1111");
+//
+//        UserDetails user = User.builder()
+//                .username("user")
+//                .password(password)
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails manager = User.builder()
+//                .username("manager")
+//                .password(password)
+//                .roles("MANAGER")
+//                .build();
+//
+//        UserDetails admin = User.builder()
+//                .username("admin")
+//                .password(password)
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user, manager, admin);
+//    }
 }
