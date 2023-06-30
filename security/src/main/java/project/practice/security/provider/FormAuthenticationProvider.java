@@ -39,7 +39,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
         // secret 키를 구성해서 전달하지 않으면 로그인 실패하게 하기
         FormWebAuthenticationDetails formWebAuthenticationDetails = (FormWebAuthenticationDetails) authentication.getDetails();
         String secretKey = formWebAuthenticationDetails.getSecretKey();
-        if (secretKey == null || "secret".equals(secretKey)) {
+        if (secretKey == null || !"secret".equals(secretKey)) {
             throw new InsufficientAuthenticationException("InsufficientAuthenticationException");
         }
 
