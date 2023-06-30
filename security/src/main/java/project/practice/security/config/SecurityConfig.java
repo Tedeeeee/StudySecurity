@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import project.practice.security.common.FormAuthenticationDetailsSource;
+import project.practice.security.handler.CustomAuthenticationFailureHandler;
 import project.practice.security.handler.CustomAuthenticationSuccessHandler;
 import project.practice.security.service.CustomUserDetailsService;
 
@@ -30,6 +31,7 @@ public class SecurityConfig {
 
     private final FormAuthenticationDetailsSource formAuthenticationDetailsSource;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     // js, css, 이미지파일등 보안이 따로 필요없는 파일들을 모두 시큐리티를 그냥 통과하게 둔다.
     @Bean
@@ -41,7 +43,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/", "/users").permitAll()
+                        .requestMatchers("/", "/users", "/login*").permitAll()
                         .requestMatchers("/mypage").hasRole("USER")
                         .requestMatchers("/messages").hasRole("MANAGER")
                         .requestMatchers("/config").hasRole("ADMIN")
@@ -54,6 +56,7 @@ public class SecurityConfig {
                         .authenticationDetailsSource(formAuthenticationDetailsSource)
                         .defaultSuccessUrl("/")
                         .successHandler(customAuthenticationSuccessHandler)
+                        .failureHandler(customAuthenticationFailureHandler)
                         .permitAll() // 이런식으로 하면 페이지 권한 설정이 가능함
                 );
 
