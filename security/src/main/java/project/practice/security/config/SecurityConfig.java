@@ -29,20 +29,26 @@ public class SecurityConfig {
     // js, css, 이미지파일등 보안이 따로 필요없는 파일들을 모두 시큐리티를 그냥 통과하게 둔다.
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        return web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/","/users").permitAll()
+                        .requestMatchers("/", "/users").permitAll()
                         .requestMatchers("/mypage").hasRole("USER")
                         .requestMatchers("/messages").hasRole("MANAGER")
                         .requestMatchers("/config").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
 
-                .formLogin(Customizer.withDefaults());
+                .formLogin((formLogin) -> formLogin
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/")
+                        .loginProcessingUrl("/login_proc")
+                        .permitAll() // 이런식으로 하면 페이지 권한 설정이 가능함
+                );
 
         return http.build();
     }
