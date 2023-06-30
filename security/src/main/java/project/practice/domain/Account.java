@@ -1,9 +1,6 @@
 package project.practice.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -14,9 +11,18 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    @Column
     private String username;
+
+    @Column
     private String password;
+
+    @Column
     private String email;
+
+    @Column
     private String age;
+
+    @Column
     private String role;
 }
