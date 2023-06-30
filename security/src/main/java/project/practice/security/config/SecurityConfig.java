@@ -19,12 +19,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import project.practice.security.common.FormAuthenticationDetailsSource;
 import project.practice.security.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final FormAuthenticationDetailsSource formAuthenticationDetailsSource;
 
     // js, css, 이미지파일등 보안이 따로 필요없는 파일들을 모두 시큐리티를 그냥 통과하게 둔다.
     @Bean
@@ -45,8 +48,9 @@ public class SecurityConfig {
 
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/login")
-                        .defaultSuccessUrl("/")
                         .loginProcessingUrl("/login_proc")
+                        .authenticationDetailsSource(formAuthenticationDetailsSource)
+                        .defaultSuccessUrl("/")
                         .permitAll() // 이런식으로 하면 페이지 권한 설정이 가능함
                 );
 
