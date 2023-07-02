@@ -19,7 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import project.practice.security.common.FormAuthenticationDetailsSource;
+import project.practice.security.handler.CustomAccessDeniedHandler;
 import project.practice.security.handler.CustomAuthenticationFailureHandler;
 import project.practice.security.handler.CustomAuthenticationSuccessHandler;
 import project.practice.security.service.CustomUserDetailsService;
@@ -53,14 +55,25 @@ public class SecurityConfig {
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/login")
                         .loginProcessingUrl("/login_proc")
-                        .authenticationDetailsSource(formAuthenticationDetailsSource)
                         .defaultSuccessUrl("/")
+                        .authenticationDetailsSource(formAuthenticationDetailsSource)
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureHandler(customAuthenticationFailureHandler)
                         .permitAll() // 이런식으로 하면 페이지 권한 설정이 가능함
-                );
+                )
+                .exceptionHandling((exceptionHandler) -> exceptionHandler
+                        .accessDeniedHandler(accessDeniedHandler())
+                )
+        ;
 
         return http.build();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        CustomAccessDeniedHandler accessDeniedHandler = new CustomAccessDeniedHandler();
+        accessDeniedHandler.setErrorPage("/denied");
+        return accessDeniedHandler;
     }
 
     @Bean
